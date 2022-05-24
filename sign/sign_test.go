@@ -1,12 +1,16 @@
 package sign
 
 import (
+	"crypto/ecdsa"
+	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	"github.com/dustinxie/ecc"
 )
 
 /*
@@ -20,7 +24,6 @@ const (
 )
 
 func init() {
-
 }
 
 // Compare these
@@ -54,6 +57,12 @@ func TestSignByKeyring(t *testing.T) {
 	fmt.Println("Signature", hex.EncodeToString(sig))
 	fmt.Println("Pub", pubKey.String())
 	fmt.Println("Err", err)
+
+	// With ext lib.
+	digest := sha256.Sum256([]byte(msg))
+	ecdsa.Sign(rand.Reader, nil, digest[:])
+	ecc.P256k1()
+
 }
 
 func TestSignManually(t *testing.T) {
